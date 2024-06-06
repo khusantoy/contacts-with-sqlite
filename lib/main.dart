@@ -20,9 +20,36 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const ContactsScreen(),
-        '/create': (context) => const CreateContactScreen(),
+      onGenerateRoute: (RouteSettings settings) {
+        switch (settings.name) {
+          case '/':
+            return _buildRoute(settings, const ContactsScreen());
+          case '/create':
+            return _buildRoute(settings, const CreateContactScreen());
+          default:
+            return null;
+        }
+      },
+    );
+  }
+
+  PageRouteBuilder _buildRoute(RouteSettings settings, Widget page) {
+    return PageRouteBuilder(
+      settings: settings,
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
       },
     );
   }

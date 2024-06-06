@@ -7,7 +7,9 @@ class CreateContactScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           icon: const Icon(Icons.close),
         ),
         title: const Text("Create contact"),
