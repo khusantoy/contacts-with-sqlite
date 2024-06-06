@@ -26,6 +26,9 @@ class ContactsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         itemBuilder: (context, index) {
           return ListTile(
+            onTap: () {
+              Navigator.pushNamed(context, '/info');
+            },
             leading: CircleAvatar(
               backgroundColor:
                   Colors.primaries[Random().nextInt(Colors.primaries.length)],

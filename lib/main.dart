@@ -1,3 +1,4 @@
+import 'package:contacts_with_sqlite/views/screens/contact_info_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/contacts_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/create_contact_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
             return _buildRoute(settings, const ContactsScreen());
           case '/create':
             return _buildRoute(settings, const CreateContactScreen());
+          case '/info':
+            return _buildRoute(settings, const ContactInfoScreen());
           default:
             return null;
         }
