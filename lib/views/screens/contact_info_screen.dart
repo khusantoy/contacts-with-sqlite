@@ -1,7 +1,49 @@
+import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
+import 'package:contacts_with_sqlite/models/contact.dart';
 import 'package:flutter/material.dart';
 
-class ContactInfoScreen extends StatelessWidget {
-  const ContactInfoScreen({super.key});
+class ContactInfoScreen extends StatefulWidget {
+  final Contact contact;
+  const ContactInfoScreen({super.key, required this.contact});
+
+  @override
+  State<ContactInfoScreen> createState() => _ContactInfoScreenState();
+}
+
+class _ContactInfoScreenState extends State<ContactInfoScreen> {
+  final contactsController = ContactsController();
+
+  void deleteContact(Contact contact) async {
+    final response = await showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text("Are you sure?"),
+            content: Text(
+                "Are you want to delete ${contact.firstName} ${contact.lastName}"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text("Cancel"),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text("Yes, I'do"),
+              )
+            ],
+          );
+        });
+
+    if (response) {
+      await contactsController.deleteContact(contact.id);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,25 +54,25 @@ class ContactInfoScreen extends StatelessWidget {
             icon: const Icon(Icons.edit),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => deleteContact(widget.contact),
             icon: const Icon(Icons.delete),
           ),
         ],
       ),
       body: Column(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 80,
             child: Text(
-              "X",
-              style: TextStyle(fontSize: 80, color: Colors.white),
+              widget.contact.firstName[0].toUpperCase(),
+              style: const TextStyle(fontSize: 80, color: Colors.white),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 30),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
             child: Text(
-              "Xusanboy Tursunov",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+              "${widget.contact.firstName} ${widget.contact.lastName}",
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
             ),
           ),
           Row(
@@ -100,14 +142,14 @@ class ContactInfoScreen extends StatelessWidget {
             child: Container(
               height: 130,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withAlpha(100),
+                color: Theme.of(context).colorScheme.inversePrimary,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 18, bottom: 10),
                     child: Text(
                       "Contact info",
@@ -116,9 +158,9 @@ class ContactInfoScreen extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.call),
-                    title: Text("+998 97 232 07 18"),
-                    subtitle: Text("Mobile"),
+                    leading: const Icon(Icons.call),
+                    title: Text("+${widget.contact.phoneNumber.toString()}"),
+                    subtitle: const Text("Mobile"),
                   )
                 ],
               ),

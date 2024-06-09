@@ -1,3 +1,6 @@
+import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
+import 'package:contacts_with_sqlite/models/contact.dart';
+import 'package:contacts_with_sqlite/services/contacts_local_database.dart';
 import 'package:contacts_with_sqlite/views/screens/contact_info_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/contacts_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/create_contact_screen.dart';
@@ -26,9 +29,18 @@ class MyApp extends StatelessWidget {
           case '/':
             return _buildRoute(settings, const ContactsScreen());
           case '/create':
-            return _buildRoute(settings, const CreateContactScreen());
+            return _buildRoute(
+              settings,
+              CreateContactScreen(
+                contactsController: settings.arguments as ContactsController,
+              ),
+            );
           case '/info':
-            return _buildRoute(settings, const ContactInfoScreen());
+            return _buildRoute(
+                settings,
+                ContactInfoScreen(
+                  contact: settings.arguments as Contact,
+                ));
           default:
             return null;
         }
