@@ -4,6 +4,7 @@ import 'package:contacts_with_sqlite/views/screens/contact_info_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/contacts_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/create_contact_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,35 +16,40 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Contacts',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      initialRoute: '/',
-      onGenerateRoute: (RouteSettings settings) {
-        switch (settings.name) {
-          case '/':
-            return _buildRoute(settings, const ContactsScreen());
-          case '/create':
-            return _buildRoute(
-              settings,
-              CreateContactScreen(
-                contactsController: settings.arguments as ContactsController,
-              ),
-            );
-          case '/info':
-            return _buildRoute(
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Contacts',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        initialRoute: '/',
+        onGenerateRoute: (RouteSettings settings) {
+          switch (settings.name) {
+            case '/':
+              return _buildRoute(settings, const ContactsScreen());
+            case '/create':
+              return _buildRoute(
                 settings,
-                ContactInfoScreen(
-                  contact: settings.arguments as Contact,
-                ));
-          default:
-            return null;
-        }
-      },
+                CreateContactScreen(
+                  contactsController: settings.arguments as ContactsController,
+                ),
+              );
+            case '/info':
+              return _buildRoute(
+                  settings,
+                  ContactInfoScreen(
+                    contact: settings.arguments as Contact,
+                  ));
+            default:
+              return null;
+          }
+        },
+      ),
     );
   }
 
