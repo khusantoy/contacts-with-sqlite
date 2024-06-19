@@ -20,6 +20,22 @@ class ContactsLocalDatabase {
     return contacts;
   }
 
+  Future<Contact> getContactById(int id) async {
+    final db = await _localDatabase.database;
+    List<Map<String, dynamic>> rows = await db.query(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (rows.isNotEmpty) {
+      // Assuming id is unique, so there should be only one result
+      return Contact.fromMap(rows.first);
+    } else {
+      throw Exception('Contact with id $id not found');
+    }
+  }
+
   Future<void> addContact(
     String firstName,
     String lastName,

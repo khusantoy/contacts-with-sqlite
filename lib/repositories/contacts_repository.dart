@@ -8,6 +8,10 @@ class ContactsRepository {
     return await contactsDatabase.getContacts();
   }
 
+  Future<Contact> getContactById(int id) async {
+    return await contactsDatabase.getContactById(id);
+  }
+
   Future<void> addContact(
       String firstName, String lastName, int phoneNumber) async {
     await contactsDatabase.addContact(firstName, lastName, phoneNumber);

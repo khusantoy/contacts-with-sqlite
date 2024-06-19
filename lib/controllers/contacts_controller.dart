@@ -12,6 +12,10 @@ class ContactsController {
     return [..._list];
   }
 
+  Future<Contact> getContactById(int id) async {
+    return await contactsRepository.getContactById(id);
+  }
+
   Future<void> addContact(
       String firstName, String lastName, int phoneNumber) async {
     await contactsRepository.addContact(firstName, lastName, phoneNumber);
