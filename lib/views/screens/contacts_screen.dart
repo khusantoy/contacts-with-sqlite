@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
+import 'package:contacts_with_sqlite/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -12,6 +11,43 @@ class ContactsScreen extends StatefulWidget {
 
 class _ContactsScreenState extends State<ContactsScreen> {
   final contactsController = ContactsController();
+  TextEditingController searchController = TextEditingController();
+  late Future<List<Contact>> contactsFuture;
+  FocusNode searchFocusNode = FocusNode();
+  List<Contact> contacts = [];
+  List<Contact> filteredContacts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    contactsFuture = contactsController.list;
+    _refreshContacts();
+  }
+
+  Future<void> _refreshContacts() async {
+    final contactsList = await contactsController.list;
+    setState(() {
+      contacts = contactsList;
+      filteredContacts = contactsList;
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _filterContacts(String query) {
+    final filtered = contacts.where((contact) {
+      final fullName = '${contact.firstName} ${contact.lastName}'.toLowerCase();
+      return fullName.contains(query.toLowerCase());
+    }).toList();
+    setState(() {
+      filteredContacts = filtered;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +57,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
         title: SizedBox(
           height: 50,
           child: TextField(
+            controller: searchController,
+            focusNode: searchFocusNode,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
               hintText: "Search contacts",
@@ -29,11 +67,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 borderRadius: BorderRadius.circular(30),
               ),
             ),
+            onChanged: _filterContacts,
           ),
         ),
       ),
-      body: FutureBuilder(
-          future: contactsController.list,
+      body: FutureBuilder<List<Contact>>(
+          future: contactsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -50,23 +89,28 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 child: Text("No information"),
               );
             }
-            final contacts = snapshot.data;
-            return contacts == null || contacts.isEmpty
+
+            return filteredContacts.isEmpty
                 ? const Center(
                     child: Text("No contacts"),
                   )
                 : ListView.builder(
-                    itemCount: contacts.length,
+                    itemCount: filteredContacts.length,
                     padding: const EdgeInsets.all(15),
                     itemBuilder: (context, index) {
-                      final contact = contacts[index];
+                      final contact = filteredContacts[index];
                       return ListTile(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/info', arguments: contact);
+                        onTap: () async {
+                          searchFocusNode.unfocus(); // Unfocus the TextField
+                          final result = await Navigator.pushNamed(
+                              context, '/info',
+                              arguments: contact);
+                          if (result == true) {
+                            _refreshContacts();
+                          }
                         },
                         leading: CircleAvatar(
-                          backgroundColor: Colors.primaries[
-                              Random().nextInt(Colors.primaries.length)],
+                          backgroundColor: contact.color,
                           child: Text(
                             contact.firstName[0].toUpperCase(),
                             style: const TextStyle(
@@ -81,8 +125,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   );
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/create',
-            arguments: contactsController),
+        onPressed: () async {
+          searchFocusNode.unfocus(); // Unfocus the TextField
+          final result = await Navigator.pushNamed(context, '/create',
+              arguments: contactsController);
+          if (result == true) {
+            _refreshContacts();
+          }
+        },
         child: const Icon(Icons.add),
       ),
     );

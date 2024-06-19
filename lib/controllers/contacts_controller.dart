@@ -17,6 +17,10 @@ class ContactsController {
     await contactsRepository.addContact(firstName, lastName, phoneNumber);
   }
 
+  Future<void> editContact(int id, Map<String, dynamic> contact) async {
+    await contactsRepository.editContact(id, contact);
+  }
+
   Future<void> deleteContact(int id) async {
     await contactsRepository.deleteContact(id);
   }

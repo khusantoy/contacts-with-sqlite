@@ -38,7 +38,8 @@ class LocalDatabase {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
-    phone_number INTEGER NOT NULL
+    phone_number INTEGER NOT NULL,
+    color TEXT NOT NULL
   )
 """);
   }

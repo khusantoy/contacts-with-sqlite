@@ -13,6 +13,10 @@ class ContactsRepository {
     await contactsDatabase.addContact(firstName, lastName, phoneNumber);
   }
 
+  Future<void> editContact(int id, Map<String, dynamic> contact) async {
+    await contactsDatabase.editContact(id, contact);
+  }
+
   Future<void> deleteContact(int id) async {
     await contactsDatabase.deleteNote(id);
   }

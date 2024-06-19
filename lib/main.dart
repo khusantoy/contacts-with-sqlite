@@ -1,6 +1,5 @@
 import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
 import 'package:contacts_with_sqlite/models/contact.dart';
-import 'package:contacts_with_sqlite/services/contacts_local_database.dart';
 import 'package:contacts_with_sqlite/views/screens/contact_info_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/contacts_screen.dart';
 import 'package:contacts_with_sqlite/views/screens/create_contact_screen.dart';

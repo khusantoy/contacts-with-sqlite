@@ -1,5 +1,6 @@
 import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CreateContactScreen extends StatefulWidget {
   final ContactsController contactsController;
@@ -13,16 +14,18 @@ class CreateContactScreen extends StatefulWidget {
 class _CreateContactScreenState extends State<CreateContactScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController firstNameController = TextEditingController();
+
   String firstName = '';
   String lastName = '';
   String phoneNumber = '';
+  String userAvatar = '';
 
   bool isLoading = false;
 
   void addContact() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      Navigator.pushNamed(context, '/');
       setState(() {
         isLoading = true;
       });
@@ -31,6 +34,7 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
       setState(() {
         isLoading = false;
       });
+      Navigator.pop(context, true);
     }
   }
 
@@ -73,24 +77,33 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 30),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
                   child: CircleAvatar(
                     radius: 60,
                     child: Text(
-                      "X",
-                      style: TextStyle(fontSize: 50, color: Colors.white),
+                      userAvatar,
+                      style: const TextStyle(fontSize: 50, color: Colors.white),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextFormField(
+                    controller: firstNameController,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.person),
                       label: Text("First name"),
                       border: OutlineInputBorder(),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value.isEmpty) {
+                          userAvatar = '';
+                        }
+                        userAvatar = value[0];
+                      });
+                    },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.name,
                     validator: (value) {
@@ -99,6 +112,7 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                       }
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onSaved: (newValue) {
                       firstName = newValue ?? '';
                     },
@@ -140,6 +154,7 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                       }
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     onSaved: (newValue) {
                       phoneNumber = newValue ?? '';
                     },

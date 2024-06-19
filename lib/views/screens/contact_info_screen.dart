@@ -1,6 +1,7 @@
 import 'package:contacts_with_sqlite/controllers/contacts_controller.dart';
 import 'package:contacts_with_sqlite/models/contact.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ContactInfoScreen extends StatefulWidget {
   final Contact contact;
@@ -40,7 +41,8 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
 
     if (response) {
       await contactsController.deleteContact(contact.id);
-      Navigator.pop(context);
+      contactsController.list;
+      Navigator.pop(context, true);
     }
   }
 
@@ -62,6 +64,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
       body: Column(
         children: [
           CircleAvatar(
+            backgroundColor: widget.contact.color,
             radius: 80,
             child: Text(
               widget.contact.firstName[0].toUpperCase(),
@@ -81,16 +84,17 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               SizedBox(
                 height: 100,
                 width: MediaQuery.of(context).size.width * 0.3,
-                child: const Column(
+                child: Column(
                   children: [
                     CircleAvatar(
+                      backgroundColor: widget.contact.color.withOpacity(0.4),
                       radius: 25,
-                      child: Icon(Icons.phone),
+                      child: const Icon(Icons.phone),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Call",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     )
@@ -100,16 +104,17 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               SizedBox(
                 height: 100,
                 width: MediaQuery.of(context).size.width * 0.3,
-                child: const Column(
+                child: Column(
                   children: [
                     CircleAvatar(
+                      backgroundColor: widget.contact.color.withOpacity(0.4),
                       radius: 25,
-                      child: Icon(Icons.message),
+                      child: const Icon(Icons.message),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Message",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     )
@@ -119,16 +124,17 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
               SizedBox(
                 height: 100,
                 width: MediaQuery.of(context).size.width * 0.3,
-                child: const Column(
+                child: Column(
                   children: [
                     CircleAvatar(
+                      backgroundColor: widget.contact.color.withOpacity(0.4),
                       radius: 25,
-                      child: Icon(Icons.video_call),
+                      child: const Icon(Icons.video_call),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Set up",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     )
@@ -142,7 +148,7 @@ class _ContactInfoScreenState extends State<ContactInfoScreen> {
             child: Container(
               height: 130,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: widget.contact.color.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(

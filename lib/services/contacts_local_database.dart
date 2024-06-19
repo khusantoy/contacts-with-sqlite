@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:contacts_with_sqlite/models/contact.dart';
 import 'package:contacts_with_sqlite/services/local_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class ContactsLocalDatabase {
   final _localDatabase = LocalDatabase();
@@ -23,12 +26,14 @@ class ContactsLocalDatabase {
     int phoneNumber,
   ) async {
     final db = await _localDatabase.database;
+    final color = Colors.primaries[Random().nextInt(Colors.primaries.length)];
 
     try {
       db.insert(_tableName, {
         "first_name": firstName,
         "last_name": lastName,
         "phone_number": phoneNumber,
+        "color": color.value.toRadixString(16) // Save color as a hex string
       });
     } catch (e) {
       if (kDebugMode) {
